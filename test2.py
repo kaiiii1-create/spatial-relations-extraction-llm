@@ -8,10 +8,10 @@ import pandas as pd
 import re
 client = OpenAI()
 
-# ✅ 你想测试的 XML 文件路径
+
 test_file = "LakeDistrictCorpus/LD80_transcribed/Anon1857_b.xml"
 
-# ✅ 提取段落函数（保持不变）
+
 def extract_paragraphs_from_xml(file_path):
     try:
         tree = ET.parse(file_path)
@@ -23,10 +23,9 @@ def extract_paragraphs_from_xml(file_path):
                 paragraphs.append(full_text)
         return paragraphs
     except Exception as e:
-        print(f"❌ Error parsing {file_path}: {e}")
+        print(f" Error parsing {file_path}: {e}")
         return []
 
-# ✅ 提取空间关系函数（保持不变）
 def extract_spatial_relationships(text):
     prompt = f"""
 You are an expert in spatial language understanding.
@@ -36,14 +35,14 @@ Your task is to extract **only spatial relationships** from the paragraph below.
 A spatial relationship describes how two physical things are located or arranged in space.
 It should be represented as a (Subject, Spatial_Relation, Object) tuple.
 
-✅ Examples of valid spatial relationships:
+ Examples of valid spatial relationships:
     ("lake", "surrounded by", "trees")
     ("hill", "next to", "forest")
     ("bridge", "over", "river")
     ("village", "in", "valley")
     ("road", "runs along", "shore")
 
-❌ Do NOT include relationships that:
+ Do NOT include relationships that:
 - only describe actions, visits, or time
 - are about who did what
 - are about naming something
@@ -64,11 +63,11 @@ Now extract spatial relationships from this paragraph:
         )
         return response.choices[0].message.content
     except Exception as e:
-        print(f"❌ OpenAI API error: {e}")
+        print(f" OpenAI API error: {e}")
         return ""
 
 
-# ✅ 主逻辑：只处理一个文件
+
 paragraphs = extract_paragraphs_from_xml(test_file)
 results = []
 
@@ -79,7 +78,6 @@ for idx, paragraph in enumerate(paragraphs):
         continue
 
     for line in extracted.strip().split("\n"):
-    # 使用正则提取括号内的部分
         match = re.search(r"\(([^)]+)\)", line)
         if match:
            try:
@@ -93,9 +91,8 @@ for idx, paragraph in enumerate(paragraphs):
                 "Object": obj.strip()
             })
            except Exception as e:
-            print(f"⚠️ 解析失败：{line} → {e}")
+            print(f" failure：{line} → {e}")
 
-# ✅ 保存为 CSV（只处理一个文件）
 df = pd.DataFrame(results)
 df.to_csv("test2_singlefile.csv", index=False)
-print("✅ Done! Results saved to test2_singlefile.csv")
+print(" Done! Results saved to test2_singlefile.csv")

@@ -18,14 +18,14 @@ def extract_paragraphs_from_xml(file_path):
         paragraphs = []
         for p in root.iter("p"):
             full_text = ''.join(p.itertext()).strip()
-            if len(full_text) > 10:  # 忽略过短段落
+            if len(full_text) > 10:
                 paragraphs.append(full_text)
         return paragraphs
     except Exception as e:
         print(f"Error parsing {file_path}: {e}")
         return []
 
-# 用 ChatGPT 提取空间关系
+
 def extract_spatial_relationships(text):
     prompt = f"""
 You are an expert in spatial language understanding.
@@ -48,10 +48,10 @@ Only return a list of such triples.
         print(f"OpenAI API error: {e}")
         return ""
 
-# 初始化结果列表
+
 results = []
 
-# 遍历所有 XML 文件
+
 for filename in os.listdir(xml_folder):
     if not filename.endswith(".xml"):
         continue
@@ -80,7 +80,7 @@ for filename in os.listdir(xml_folder):
                 except:
                     continue
 
-# 保存结果为 CSV
+
 df = pd.DataFrame(results)
 df.to_csv("chatgpt1_test.csv", index=False)
 print("successful! chatgpt1_test.csv")

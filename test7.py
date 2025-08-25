@@ -8,10 +8,10 @@ import pandas as pd
 import re
 client = OpenAI()
 
-#  你想测试的 XML 文件路径
+
 test_file = "LakeDistrictCorpus/LD80_transcribed/Anon1857_b.xml"
 
-#  提取段落函数（保持不变）
+
 def extract_paragraphs_from_xml(file_path):
     try:
         tree = ET.parse(file_path)
@@ -26,7 +26,6 @@ def extract_paragraphs_from_xml(file_path):
         print(f" Error parsing {file_path}: {e}")
         return []
 
-#  提取空间关系函数（保持不变）
 def extract_spatial_relationships(text):
     prompt = f"""
 You are an expert in spatial language understanding, analyzing Lake District writings from the 17th to 20th centuries. 
@@ -64,7 +63,7 @@ Now extract the valid spatial relationships from this paragraph:
         return ""
 
 
-#  主逻辑：只处理一个文件
+
 paragraphs = extract_paragraphs_from_xml(test_file)
 results = []
 
@@ -75,7 +74,6 @@ for idx, paragraph in enumerate(paragraphs):
         continue
 
     for line in extracted.strip().split("\n"):
-    # 使用正则提取括号内的部分
         match = re.search(r'\(\s*[\'"]?(.*?)[\'"]?\s*,\s*[\'"]?(.*?)[\'"]?\s*,\s*[\'"]?(.*?)[\'"]?\s*\)', line)
         if match:
            try:
@@ -91,7 +89,7 @@ for idx, paragraph in enumerate(paragraphs):
            except Exception as e:
             print(f" 解析失败：{line} → {e}")
 
-#  保存为 CSV（只处理一个文件）
+
 df = pd.DataFrame(results)
 df.to_csv("test7_singlefile.csv", index=False)
 print(" Done! Results saved to test7_singlefile.csv")

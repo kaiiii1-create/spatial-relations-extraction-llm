@@ -75,7 +75,7 @@ for idx, paragraph in enumerate(paragraphs):
                 "Object": obj.strip()
             })
            except Exception as e:
-            print(f" 解析失败：{line} → {e}")
+            print(f" failed：{line} → {e}")
 
 
 df = pd.DataFrame(results)

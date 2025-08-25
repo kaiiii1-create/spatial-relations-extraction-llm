@@ -8,7 +8,7 @@ from openai import OpenAI
 load_dotenv()
 client = OpenAI()
 
-# ---------- 1. 读取段落 ----------
+
 def extract_paragraphs_from_xml(file_path):
     try:
         tree = ET.parse(file_path)
@@ -23,7 +23,7 @@ def extract_paragraphs_from_xml(file_path):
         print(f" Error reading XML: {e}")
         return []
 
-# ---------- 2. 判断关系是否合法 ----------
+
 def is_valid_spatial_relation(relation):
     relation = relation.lower().strip()
     invalid_keywords = [
@@ -32,7 +32,7 @@ def is_valid_spatial_relation(relation):
     ]
     return not any(bad in relation for bad in invalid_keywords)
 
-# ---------- 3. Function schema ----------
+# ---------- Function schema ----------
 function_schema = {
     "name": "extract_spatial_relationship",
     "description": "Extract one spatial relationship from the text, in (subject, spatial_relation, object) format.",
@@ -50,11 +50,11 @@ function_schema = {
     }
 }
 
-# ---------- 4. 提取关系 ----------
+
 def extract_relation_from_text(text):
     try:
         response = client.chat.completions.create(
-            model="gpt-4o-mini",  # 支持 function calling 的模型
+            model="gpt-4o-mini",  # model that supports functioncall
             messages=[
                 {"role": "system", "content": "You are an expert in extracting spatial relationships between physical places."},
                 {"role": "user", "content": f"Extract one spatial relationship from this paragraph:\n\n{text}"}
@@ -94,9 +94,9 @@ def run_spatial_extraction(file_path, output_csv):
 
     df = pd.DataFrame(extracted)
     df.to_csv(output_csv, index=False)
-    print(f"\n 提取完成，共 {len(extracted)} 条关系，已保存到：{output_csv}")
+    print(f"\n finished， {len(extracted)} relations，saved to：{output_csv}")
 
-# ---------- 执行 ----------
+
 if __name__ == "__main__":
     input_xml = "LakeDistrictCorpus/LD80_transcribed/Anon1857_b.xml"  
     output_csv = "test12_singlefile.csv"
